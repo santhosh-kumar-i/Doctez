@@ -1,0 +1,58 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+
+function App() {
+  const [ehrData, setEhrData] = useState(null);
+  const user_id = 'user1'; // Replace with the actual user ID
+
+  useEffect(() => {
+    // Fetch EHR data from the backend
+    fetch('http://localhost:5000/get_ehr', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ user_id }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setEhrData(data.ehr_data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Text>Electronic Health Records</Text>
+      {ehrData ? (
+        <View>
+          <Text>Name: {ehrData.patient_info.name}</Text>
+          <Text>Date of Birth: {ehrData.patient_info.dob}</Text>
+          <Text>Gender: {ehrData.patient_info.gender}</Text>
+          <Text>Medical History:</Text>
+          {ehrData.medical_history.map((record, index) => (
+            <View key={index}>
+              <Text>Date: {record.date}</Text>
+              <Text>Condition: {record.condition}</Text>
+              <Text>Medications: {record.medications.join(', ')}</Text>
+            </View>
+          ))}
+        </View>
+      ) : (
+        <Text>No EHR data available</Text>
+      )}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default App;
