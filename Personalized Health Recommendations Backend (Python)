@@ -1,0 +1,22 @@
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+# Sample recommendations based on user data
+recommendations = {
+    'user1': ['Eat a balanced diet', 'Exercise regularly', 'Get enough sleep'],
+    'user2': ['Reduce sodium intake', 'Monitor blood pressure', 'Stay hydrated'],
+    # Add more user-specific recommendations as needed
+}
+
+@app.route('/get_recommendations', methods=['POST'])
+def get_recommendations():
+    user_id = request.json.get('user_id')
+    
+    if user_id in recommendations:
+        return jsonify({'recommendations': recommendations[user_id]})
+    else:
+        return jsonify({'recommendations': []})
+
+if __name__ == '__main__':
+    app.run(debug=True)
