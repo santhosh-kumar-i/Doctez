@@ -1,0 +1,57 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
+
+function App() {
+  const [prescriptions, setPrescriptions] = useState([]);
+  const [selectedPrescription, setSelectedPrescription] = useState(null);
+
+  useEffect(() => {
+    // Simulate fetching a list of prescriptions for the user (replace with actual API calls)
+    const userPrescriptions = [
+      { id: 'prescription1', medication: 'Medication A', dosage: '10mg', pharmacy: 'Pharmacy 1' },
+      { id: 'prescription2', medication: 'Medication B', dosage: '20mg', pharmacy: 'Pharmacy 2' },
+    ];
+    setPrescriptions(userPrescriptions);
+  }, []);
+
+  const fulfillPrescription = (prescription) => {
+    // Simulate the process of fulfilling a prescription (replace with actual implementation)
+    alert(`Fulfilling prescription for ${prescription.medication} at ${prescription.pharmacy}`);
+  };
+
+  const renderPrescriptionItem = ({ item }) => (
+    <View style={styles.prescriptionItem}>
+      <Text>{item.medication}</Text>
+      <Text>Dosage: {item.dosage}</Text>
+      <Button title="Fulfill Prescription" onPress={() => fulfillPrescription(item)} />
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <Text>E-Prescriptions</Text>
+      <FlatList
+        data={prescriptions}
+        renderItem={renderPrescriptionItem}
+        keyExtractor={(item) => item.id}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  prescriptionItem: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 5,
+  },
+});
+
+export default App;
