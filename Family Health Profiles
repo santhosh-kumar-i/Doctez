@@ -1,0 +1,85 @@
+import React, { useState } from 'react';
+import { View, Text, Button, StyleSheet, FlatList } from 'react-native';
+
+function App() {
+  const [activeProfile, setActiveProfile] = useState(null);
+  const familyProfiles = [
+    {
+      id: 'user1',
+      name: 'John Doe',
+      relation: 'Self',
+      dob: '1980-01-15',
+      gender: 'Male',
+      medicalHistory: [
+        { condition: 'Hypertension', medications: ['Lisinopril', 'Amlodipine'] },
+        // Add more medical history records as needed
+      ],
+    },
+    {
+      id: 'user2',
+      name: 'Jane Doe',
+      relation: 'Spouse',
+      dob: '1985-05-20',
+      gender: 'Female',
+      medicalHistory: [
+        { condition: 'Type 2 Diabetes', medications: ['Metformin', 'Insulin'] },
+        // Add more medical history records as needed
+      ],
+    },
+    // Add more family profiles as needed
+  ];
+
+  const switchProfile = (profileId) => {
+    setActiveProfile(profileId);
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text>Family Health Profiles</Text>
+      <FlatList
+        data={familyProfiles}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.profileCard}>
+            <Text>Name: {item.name}</Text>
+            <Text>Relation: {item.relation}</Text>
+            <Text>Date of Birth: {item.dob}</Text>
+            <Text>Gender: {item.gender}</Text>
+            <Button
+              title="Switch to Profile"
+              onPress={() => switchProfile(item.id)}
+            />
+            {activeProfile === item.id && (
+              <View>
+                <Text>Medical History:</Text>
+                {item.medicalHistory.map((record, index) => (
+                  <View key={index}>
+                    <Text>Condition: {record.condition}</Text>
+                    <Text>Medications: {record.medications.join(', ')}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
+        )}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileCard: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 10,
+  },
+});
+
+export default App;
