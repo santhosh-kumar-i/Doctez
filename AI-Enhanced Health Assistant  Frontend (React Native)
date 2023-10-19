@@ -1,0 +1,64 @@
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+
+function App() {
+  const [userQuestion, setUserQuestion] = useState('');
+  const [assistantResponse, setAssistantResponse] = useState('');
+
+  const askHealthAssistant = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/ask_health_assistant', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question: userQuestion }),
+      });
+
+      const data = await response.json();
+      setAssistantResponse(data.response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text>AI-Enhanced Health Assistant</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Ask a health-related question"
+        onChangeText={(text) => setUserQuestion(text)}
+        value={userQuestion}
+      />
+      <Button title="Ask" onPress={askHealthAssistant} />
+      {assistantResponse && (
+        <View style={styles.responseContainer}>
+          <Text>Assistant's Response:</Text>
+          <Text>{assistantResponse}</Text>
+        </View>
+      )}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  input: {
+    width: '80%',
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    padding: 10,
+    marginVertical: 10,
+  },
+  responseContainer: {
+    marginTop: 20,
+  },
+});
+
+export default App;
