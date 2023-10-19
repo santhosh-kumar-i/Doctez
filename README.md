@@ -81,7 +81,10 @@ But that's not all. Doctez goes above and beyond by offering unique features tha
 
 30. E-Prescriptions: Say goodbye to paper prescriptions. Doctez enables doctors to issue electronic prescriptions that you can access and fulfill at your preferred pharmacy.
 
-31. AI-Enhanced Health Assistant: Meet your virtual health companion. Our AI-powered assistant answers health-related questions, provides medication reminders, and offers general health advice.**Revenue Model**:
+31. AI-Enhanced Health Assistant: Meet your virtual health companion. Our AI-powered assistant answers health-related questions, provides medication reminders, and offers general health advice.
+
+   
+**Revenue Model**:
 Doctez can adopt a revenue model that includes subscription plans for premium features, transaction fees for appointment bookings, advertising opportunities for healthcare-related products and services, and partnerships with insurance providers. The goal is to ensure sustainability and continued innovation while offering valuable services to users.
 
 In summary, Doctez addresses critical healthcare challenges by providing an integrated, accessible, and secure platform. Its unique features, commitment to user privacy, and focus on improving the healthcare experience position it as a valuable player in the healthcare technology market. By catering to both patients and healthcare providers, Doctez aims to create a win-win solution for all stakeholders in the healthcare ecosystem.
