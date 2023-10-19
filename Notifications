@@ -1,0 +1,61 @@
+import React, { useEffect } from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+import messaging from '@react-native-firebase/messaging'; // Install the Firebase messaging library
+
+function App() {
+  useEffect(() => {
+    // Request permission for push notifications
+    messaging()
+      .requestPermission()
+      .then(() => {
+        console.log('Permission granted');
+      })
+      .catch((error) => {
+        console.error('Permission denied', error);
+      });
+
+    // Listen for incoming push notifications
+    const unsubscribe = messaging().onMessage((remoteMessage) => {
+      console.log('Received push notification', remoteMessage);
+      // Handle the incoming notification, e.g., show an alert or update UI
+    });
+
+    // Unsubscribe when the component unmounts
+    return unsubscribe;
+  }, []);
+
+  const sendPushNotification = () => {
+    // Send a test push notification
+    messaging()
+      .send({
+        data: {
+          title: 'Appointment Reminder',
+          body: 'Your appointment is tomorrow at 10 AM.',
+        },
+        topic: 'appointment_reminder', // You can use topics to target specific groups of users
+      })
+      .then(() => {
+        console.log('Push notification sent');
+      })
+      .catch((error) => {
+        console.error('Error sending push notification', error);
+      });
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text>Push Notifications</Text>
+      <Button title="Send Push Notification" onPress={sendPushNotification} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default App;
