@@ -1,0 +1,65 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+import { CardField, useConfirmPayment } from '@stripe/stripe-react-native'; // Install the Stripe library for React Native
+
+function App() {
+  const [paymentMethod, setPaymentMethod] = useState(null);
+
+  const { confirmPayment } = useConfirmPayment();
+
+  const handlePayment = async () => {
+    try {
+      const { paymentIntent, error } = await confirmPayment(paymentMethod.clientSecret);
+
+      if (error) {
+        console.error(error);
+      } else {
+        // Payment was successful, you can now update your backend and provide services
+        console.log('Payment successful', paymentIntent);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch a client secret from your backend for creating the payment intent
+    fetch('/api/create-payment-intent', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ amount: 1000, currency: 'usd' }), // Replace with your actual payment details
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setPaymentMethod({ clientSecret: data.clientSecret });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Text>Payment Integration</Text>
+      <CardField
+        postalCodeEnabled={false}
+        onCardChange={(cardDetails) => {
+          // Handle card details changes
+        }}
+      />
+      <Button title="Pay" onPress={handlePayment} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default App;
