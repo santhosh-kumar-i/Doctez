@@ -1,0 +1,47 @@
+import React, { useState } from 'react';
+import { View, Text, Picker, StyleSheet } from 'react-native';
+
+const translations = {
+  en: {
+    greeting: 'Hello, how can we assist you today?',
+    language: 'Language:',
+  },
+  es: {
+    greeting: '¡Hola, ¿cómo podemos ayudarte hoy?',
+    language: 'Idioma:',
+  },
+  fr: {
+    greeting: 'Bonjour, comment pouvons-nous vous aider aujourd\'hui?',
+    language: 'Langue:',
+  },
+};
+
+function App() {
+  const [selectedLanguage, setSelectedLanguage] = useState('en');
+  const currentTranslation = translations[selectedLanguage];
+
+  return (
+    <View style={styles.container}>
+      <Text>{currentTranslation.greeting}</Text>
+      <Text>{currentTranslation.language}</Text>
+      <Picker
+        selectedValue={selectedLanguage}
+        onValueChange={(itemValue) => setSelectedLanguage(itemValue)}
+      >
+        <Picker.Item label="English" value="en" />
+        <Picker.Item label="Español" value="es" />
+        <Picker.Item label="Français" value="fr" />
+      </Picker>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default App;
