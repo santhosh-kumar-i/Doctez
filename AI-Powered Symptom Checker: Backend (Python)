@@ -1,0 +1,23 @@
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+# Sample symptom-checking logic (replace with a real machine learning model)
+def check_symptoms(symptoms):
+    # In a real-world scenario, use a machine learning model to diagnose symptoms
+    diagnosis = 'Consult a healthcare professional for a proper evaluation.'
+    return diagnosis
+
+@app.route('/check_symptoms', methods=['POST'])
+def symptom_checker():
+    data = request.json
+    symptoms = data.get('symptoms', [])
+
+    if not symptoms:
+        return jsonify({'diagnosis': 'No symptoms provided.'})
+
+    diagnosis = check_symptoms(symptoms)
+    return jsonify({'diagnosis': diagnosis})
+
+if __name__ == '__main__':
+    app.run(debug=True)
