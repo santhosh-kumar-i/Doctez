@@ -1,0 +1,33 @@
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+# Sample medication reminder data (replace with a real AI-driven system)
+medication_reminders = {}
+
+@app.route('/set_medication_reminder', methods=['POST'])
+def set_medication_reminder():
+    data = request.json
+    user_id = data.get('user_id')
+    medication_name = data.get('medication_name')
+    reminder_time = data.get('reminder_time')
+
+    if user_id not in medication_reminders:
+        medication_reminders[user_id] = []
+
+    medication_reminders[user_id].append({'medication_name': medication_name, 'reminder_time': reminder_time})
+
+    return jsonify({'message': 'Medication reminder set successfully'})
+
+@app.route('/get_medication_reminders', methods=['GET'])
+def get_medication_reminders():
+    user_id = request.args.get('user_id')
+
+    if user_id in medication_reminders:
+        reminders = medication_reminders[user_id]
+        return jsonify({'medication_reminders': reminders})
+    else:
+        return jsonify({'medication_reminders': []})
+
+if __name__ == '__main__':
+    app.run(debug=True)
