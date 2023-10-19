@@ -1,0 +1,87 @@
+// Import necessary libraries
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
+// Create an Express application
+const app = express();
+
+// Define MongoDB connection URL
+const mongoURI = 'mongodb://localhost/doctezDB'; // Replace with your MongoDB connection URL
+
+// Connect to MongoDB
+mongoose
+  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.error(err));
+
+// Middleware for parsing JSON requests
+app.use(bodyParser.json());
+
+// Define Mongoose schema and model for user profiles
+const UserSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  medicalHistory: String,
+});
+
+const User = mongoose.model('User', UserSchema);
+
+// Create a new user profile
+app.post('/api/users', async (req, res) => {
+  const { name, email, medicalHistory } = req.body;
+  const newUser = new User({ name, email, medicalHistory });
+  try {
+    await newUser.save();
+    res.status(201).json(newUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error creating user profile' });
+  }
+});
+
+// Retrieve user profiles
+app.get('/api/users', async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching user profiles' });
+  }
+});
+
+// Update user profile by ID
+app.put('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, email, medicalHistory } = req.body;
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { name, email, medicalHistory },
+      { new: true }
+    );
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error updating user profile' });
+  }
+});
+
+// Delete user profile by ID
+app.delete('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await User.findByIdAndRemove(id);
+    res.status(204).end();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error deleting user profile' });
+  }
+});
+
+// Start the server on a specified port
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
