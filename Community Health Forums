@@ -1,0 +1,97 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
+
+function App() {
+  const [forums, setForums] = useState([]);
+  const [newPost, setNewPost] = useState('');
+  const user_id = 'user1'; // Replace with the actual user ID
+
+  useEffect(() => {
+    // Fetch forums from the backend
+    fetch('http://localhost:5000/get_forums')
+      .then((response) => response.json())
+      .then((data) => {
+        setForums(data.forums);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const addForumPost = () => {
+    // Send a request to the backend to add a new forum post
+    fetch('http://localhost:5000/add_forum_post', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ user_id, post_content: newPost }),
+    })
+      .then(() => {
+        setNewPost('');
+        // Refresh the list of forums
+        fetch('http://localhost:5000/get_forums')
+          .then((response) => response.json())
+          .then((data) => {
+            setForums(data.forums);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const renderForumItem = ({ item }) => (
+    <View style={styles.forumPost}>
+      <Text>User: {item.user}</Text>
+      <Text>{item.content}</Text>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <Text>Community Health Forums</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="New Forum Post"
+        onChangeText={(text) => setNewPost(text)}
+        value={newPost}
+      />
+      <Button title="Add Post" onPress={addForumPost} />
+      <Text>Forum Posts:</Text>
+      <FlatList
+        data={forums}
+        renderItem={renderForumItem}
+        keyExtractor={(item, index) => index.toString()}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  input: {
+    width: '80%',
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 10,
+  },
+  forumPost: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 5,
+  },
+});
+
+export default App;
