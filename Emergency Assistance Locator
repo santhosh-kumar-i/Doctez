@@ -1,0 +1,86 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, Button, StyleSheet, Linking } from 'react-native';
+
+function App() {
+  const [userLocation, setUserLocation] = useState(null);
+
+  useEffect(() => {
+    // Simulate getting the user's location (replace with actual location data)
+    setTimeout(() => {
+      setUserLocation({ latitude: 123.456, longitude: -78.910 });
+    }, 2000);
+  }, []);
+
+  const findEmergencyServices = () => {
+    // Simulate finding nearby emergency services (replace with actual API calls)
+    const emergencyServices = [
+      {
+        name: 'Emergency Hospital',
+        address: '123 Main St',
+        phone: '123-456-7890',
+        latitude: 123.456,
+        longitude: -78.910,
+      },
+      {
+        name: 'Pharmacy',
+        address: '456 Elm St',
+        phone: '987-654-3210',
+        latitude: 124.456,
+        longitude: -78.911,
+      },
+    ];
+
+    // Calculate distances (replace with actual distance calculation logic)
+    emergencyServices.forEach((service) => {
+      const distance = calculateDistance(userLocation, service);
+      service.distance = distance;
+    });
+
+    // Sort by distance
+    emergencyServices.sort((a, b) => a.distance - b.distance);
+
+    // Display the nearest emergency service
+    if (emergencyServices.length > 0) {
+      const nearestService = emergencyServices[0];
+      const { name, address, phone, latitude, longitude } = nearestService;
+
+      // Show the nearest service details
+      alert(
+        `Nearest Service:\nName: ${name}\nAddress: ${address}\nPhone: ${phone}`
+      );
+
+      // Open maps app with directions
+      Linking.openURL(
+        `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`
+      );
+    } else {
+      alert('No emergency services found nearby.');
+    }
+  };
+
+  // Simulated distance calculation function
+  const calculateDistance = (location1, location2) => {
+    // Replace with actual distance calculation logic
+    return Math.sqrt(
+      Math.pow(location1.latitude - location2.latitude, 2) +
+        Math.pow(location1.longitude - location2.longitude, 2)
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text>Emergency Assistance Locator</Text>
+      <Button title="Find Emergency Services" onPress={findEmergencyServices} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default App;
