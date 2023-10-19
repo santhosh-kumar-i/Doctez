@@ -1,0 +1,32 @@
+import React, { useEffect } from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge';
+
+function App() {
+  useEffect(() => {
+    const tracker = new GoogleAnalyticsTracker('YOUR_GA_TRACKING_ID'); // Replace with your Google Analytics tracking ID
+
+    // Send a screen view event when the component mounts
+    tracker.trackScreenView('Home Screen');
+
+    // You can also track events based on user interactions
+    tracker.trackEvent('User Interaction', 'Button Clicked');
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Text>Analytics and Insights</Text>
+      <Button title="Track Event" onPress={() => trackCustomEvent('Button Clicked')} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default App;
