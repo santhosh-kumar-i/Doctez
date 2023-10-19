@@ -1,0 +1,16 @@
+from flask import Flask, request, jsonify
+import chatbot_ai  # Replace with your AI model or service integration
+
+app = Flask(__name__)
+
+@app.route('/ask_health_assistant', methods=['POST'])
+def ask_health_assistant():
+    try:
+        user_question = request.json['question']
+        response = chatbot_ai.answer(user_question)  # Replace with your AI model or service call
+        return jsonify({'response': response})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+if __name__ == '__main__':
+    app.run(debug=True)
