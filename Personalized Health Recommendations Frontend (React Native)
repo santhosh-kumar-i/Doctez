@@ -1,0 +1,50 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, Button, StyleSheet, FlatList } from 'react-native';
+
+function App() {
+  const [userRecommendations, setUserRecommendations] = useState([]);
+  const user_id = 'user1'; // Replace with the actual user ID
+
+  useEffect(() => {
+    // Fetch personalized recommendations from the backend
+    fetch('http://localhost:5000/get_recommendations', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ user_id }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setUserRecommendations(data.recommendations);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Text>Personalized Health Recommendations</Text>
+      <FlatList
+        data={userRecommendations}
+        renderItem={({ item }) => <Text style={styles.recommendation}>{item}</Text>}
+        keyExtractor={(item, index) => index.toString()}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  recommendation: {
+    fontSize: 16,
+    marginVertical: 8,
+  },
+});
+
+export default App;
