@@ -1,0 +1,45 @@
+import React, { useState } from 'react';
+import { View, Text, Button, StyleSheet, Linking } from 'react-native';
+
+function App() {
+  const [showResources, setShowResources] = useState(false);
+
+  const openMentalHealthResources = () => {
+    setShowResources(true);
+  };
+
+  const openVirtualCounseling = () => {
+    // Simulated link to virtual counseling platform (replace with actual link)
+    const counselingPlatformURL = 'https://www.example.com/virtual_counseling';
+    Linking.openURL(counselingPlatformURL);
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text>Mental Health Support</Text>
+      {!showResources ? (
+        <Button title="Access Mental Health Resources" onPress={openMentalHealthResources} />
+      ) : (
+        <View>
+          <Text>Self-Help Tools:</Text>
+          <Text>- Breathing exercises</Text>
+          <Text>- Stress reduction techniques</Text>
+          <Text>Guided Meditation Sessions:</Text>
+          <Text>- Session 1: Relaxation meditation</Text>
+          <Text>- Session 2: Mindfulness meditation</Text>
+          <Button title="Connect to Virtual Counseling" onPress={openVirtualCounseling} />
+        </View>
+      )}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default App;
