@@ -1,0 +1,35 @@
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+# Sample EHR data (replace with your actual EHR integration)
+ehr_data = {
+    'user1': {
+        'patient_info': {
+            'name': 'John Doe',
+            'dob': '1980-01-15',
+            'gender': 'Male',
+        },
+        'medical_history': [
+            {
+                'date': '2022-03-15',
+                'condition': 'Hypertension',
+                'medications': ['Lisinopril', 'Amlodipine'],
+            },
+            # Add more medical history records as needed
+        ],
+    },
+    # Add more user-specific EHR data as needed
+}
+
+@app.route('/get_ehr', methods=['POST'])
+def get_ehr():
+    user_id = request.json.get('user_id')
+    
+    if user_id in ehr_data:
+        return jsonify({'ehr_data': ehr_data[user_id]})
+    else:
+        return jsonify({'ehr_data': None})
+
+if __name__ == '__main__':
+    app.run(debug=True)
