@@ -1,0 +1,75 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
+
+function App() {
+  const [connectedDevices, setConnectedDevices] = useState([]);
+  const [deviceData, setDeviceData] = useState({});
+
+  useEffect(() => {
+    // Simulate fetching a list of connected devices (replace with actual device discovery logic)
+    const devices = [
+      { id: 'device1', name: 'Fitness Tracker' },
+      { id: 'device2', name: 'Blood Pressure Monitor' },
+      { id: 'device3', name: 'Glucose Meter' },
+    ];
+    setConnectedDevices(devices);
+  }, []);
+
+  const fetchDataFromDevice = (deviceId) => {
+    // Simulate fetching data from a connected device (replace with actual device data retrieval)
+    const data = {
+      device1: { steps: 5000, distance: 3.5 },
+      device2: { systolic: 120, diastolic: 80 },
+      device3: { glucoseLevel: 100 },
+    };
+    setDeviceData(data[deviceId]);
+  };
+
+  const renderDeviceItem = ({ item }) => (
+    <View style={styles.deviceItem}>
+      <Text>{item.name}</Text>
+      <Button title="Sync Data" onPress={() => fetchDataFromDevice(item.id)} />
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <Text>Wearables and IoT Devices Integration</Text>
+      <FlatList
+        data={connectedDevices}
+        renderItem={renderDeviceItem}
+        keyExtractor={(item) => item.id}
+      />
+      {Object.keys(deviceData).length > 0 && (
+        <View style={styles.deviceData}>
+          <Text>Device Data:</Text>
+          {Object.keys(deviceData).map((key) => (
+            <Text key={key}>
+              {key}: {deviceData[key]}
+            </Text>
+          ))}
+        </View>
+      )}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  deviceItem: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 5,
+  },
+  deviceData: {
+    marginTop: 20,
+  },
+});
+
+export default App;
