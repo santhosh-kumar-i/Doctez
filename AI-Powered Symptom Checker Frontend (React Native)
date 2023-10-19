@@ -1,0 +1,57 @@
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+
+function App() {
+  const [symptoms, setSymptoms] = useState('');
+  const [diagnosis, setDiagnosis] = useState('');
+
+  const handleSymptomCheck = () => {
+    // Send a request to the backend to check symptoms
+    fetch('http://localhost:5000/check_symptoms', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ symptoms: symptoms.split(', ') }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setDiagnosis(data.diagnosis);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text>AI-Powered Symptom Checker</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter symptoms (comma-separated)"
+        onChangeText={(text) => setSymptoms(text)}
+        value={symptoms}
+      />
+      <Button title="Check Symptoms" onPress={handleSymptomCheck} />
+      <Text>Diagnosis: {diagnosis}</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  input: {
+    width: '80%',
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 10,
+  },
+});
+
+export default App;
