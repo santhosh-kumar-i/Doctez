@@ -1,0 +1,57 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+// Define MongoDB connection URL
+const mongoURI = 'mongodb://localhost/doctezDB'; // Replace with your MongoDB connection URL
+
+mongoose
+  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.error(err));
+
+app.use(bodyParser.json());
+
+// Define Mongoose schema and model for reviews
+const ReviewSchema = new mongoose.Schema({
+  doctorId: String,
+  userId: String,
+  rating: Number,
+  comment: String,
+  createdAt: { type: Date, default: Date.now },
+});
+
+const Review = mongoose.model('Review', ReviewSchema);
+
+// Create a new review
+app.post('/api/reviews', async (req, res) => {
+  const { doctorId, userId, rating, comment } = req.body;
+  const newReview = new Review({ doctorId, userId, rating, comment });
+  try {
+    await newReview.save();
+    res.status(201).json(newReview);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error creating a review' });
+  }
+});
+
+// Retrieve reviews for a specific doctor
+app.get('/api/reviews/:doctorId', async (req, res) => {
+  const { doctorId } = req.params;
+  try {
+    const reviews = await Review.find({ doctorId });
+    res.status(200).json(reviews);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching reviews' });
+  }
+});
+
+// Start the server on a specified port
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
