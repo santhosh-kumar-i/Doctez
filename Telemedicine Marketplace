@@ -1,0 +1,78 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
+
+function App() {
+  const [doctors, setDoctors] = useState([]);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+
+  useEffect(() => {
+    // Fetch a list of doctors from the backend
+    fetch('http://localhost:5000/get_doctors')
+      .then((response) => response.json())
+      .then((data) => {
+        setDoctors(data.doctors);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const selectDoctor = (doctor) => {
+    setSelectedDoctor(doctor);
+  };
+
+  const renderDoctorItem = ({ item }) => (
+    <View style={styles.doctorCard}>
+      <Text>Name: {item.name}</Text>
+      <Text>Specialty: {item.specialty}</Text>
+      <Text>Rating: {item.rating}</Text>
+      <Text>Availability: {item.availability}</Text>
+      <Button title="Select Doctor" onPress={() => selectDoctor(item)} />
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <Text>Telemedicine Marketplace</Text>
+      {selectedDoctor ? (
+        <View style={styles.selectedDoctorCard}>
+          <Text>Selected Doctor:</Text>
+          <Text>Name: {selectedDoctor.name}</Text>
+          <Text>Specialty: {selectedDoctor.specialty}</Text>
+          <Text>Rating: {selectedDoctor.rating}</Text>
+          <Text>Availability: {selectedDoctor.availability}</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={doctors}
+          renderItem={renderDoctorItem}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      )}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  doctorCard: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 10,
+  },
+  selectedDoctorCard: {
+    borderWidth: 1,
+    borderColor: 'blue',
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 10,
+  },
+});
+
+export default App;
