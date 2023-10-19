@@ -18,7 +18,6 @@ Doctez targets a diverse range of users, including:
 
 **Solution and Market Fit**:
 Doctez's solution fits into the existing market landscape by offering several key advantages:
-Comprehensive Healthcare Platform: Doctez provides an all-in-one platform for patients, doctors, and healthcare organizations to interact, schedule appointments, and manage healthcare needs efficiently.
 
 1. Seamless and Intuitive User Interface: Doctez employs cutting-edge technologies like React Native and Swift to ensure a seamless and user-friendly experience for both patients and doctors. Our app's interface is designed with your comfort in mind, making it a breeze to navigate.
 
